@@ -1,3 +1,10 @@
-export default function QuotePage({ params }: { params: { id: string } }) {
-  return <div className="p-6"><h1 className="text-heading-lg font-semibold">Quote {params.id}</h1><p className="text-muted-foreground mt-2">Quote detail coming in TKT-009.</p></div>;
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { QuoteDetailClient } from "@/components/quote/quote-detail-client";
+
+export default async function QuotePage({ params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions);
+  if (!session) redirect("/login");
+  return <QuoteDetailClient quoteId={params.id} session={session} />;
 }
